@@ -1,0 +1,66 @@
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <title>W02: Task03</title>
+    </head>
+    <body>
+        <script src="vec3.js"></script>
+        <script src="areaOfTriangle.js"></script>
+        <div>
+            Calculate the area of a triangle
+            <br>
+            <br>
+            Please enter the coordinates...
+        </div>
+        <div>
+            vertex 0 :
+            <label>x
+                <input type="number" id="x0" name="x0" value="1">
+            </label>
+            <label>y
+                <input type="number" id="y0" name="y0" value="0">
+            </label>
+            <label>z
+                <input type="number" id="z0" name="z0" value="0">
+            </label>
+        </div>
+        <div>
+            vertex 1 :
+            <label>x
+                <input type="number" id="x1" name="x1" value="0">
+            </label>
+            <label>y
+                <input type="number" id="y1" name="y1" value="1">
+            </label>
+            <label>z
+                <input type="number" id="z1" name="z1" value="0">
+            </label>
+        </div>
+        <div>
+            vertex 2 :
+            <label>x
+                <input type="number" id="x2" name="x2" value="0">
+            </label>
+            <label>y
+                <input type="number" id="y2" name="y2" value="0">
+            </label>
+            <label>z
+                <input type="number" id="z2" name="z2" value="0">
+            </label>
+        </div>
+        <div>
+            <input type="button" value="Show result" onclick="clickBtn()">
+        </div>
+        <p id="msg"></p>
+        <script>
+            function clickBtn() {
+                var v0 = new Vec3( x0.value, y0.value, z0.value );
+                var v1 = new Vec3( x1.value, y1.value, z1.value );
+                var v2 = new Vec3( x2.value, y2.value, z2.value );
+                var S = AreaOfTriangle( v0, v1, v2 ); // (output value)
+                var msgArea = document.getElementById("msg");
+                msgArea.innerHTML = S;
+            }
+        </script>
+    </body>
+</html>
