@@ -1,0 +1,82 @@
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <title>W04: Task 1</title>
+    </head>
+    <body>
+        <!-- 237カ国 -->
+        <svg id="area" width="1000" height="2000" viewBox="0, 0, 1000, 1000"></svg>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script>
+            var svg = d3.select("#area");
+            d3.csv("https://kazuming.github.io/InfoVis2022/W04/WHO-COVID-19-global-table-data.csv", draw);
+            function draw(data){
+                // http://defghi1977.html.xdomain.jp/tech/svgMemo/svgMemo_20.htm
+                //データの配列
+                // var dataArr = [
+                    //     {name: "Taro", score: 20},
+                    //     {name: "Jiro", score: 31},
+                    //     {name: "Miki", score: 14},
+                    //     {name: "Yumi", score: 32},
+                    //     {name: "Keko", score: 45},
+                    //     {name: "Yuji", score: 28},
+                    //     {name: "Toru", score: 19}
+                    // ];
+                    //カンバスの定義
+                    // var canvas = d3.select("#canvas8");
+                data.shift()
+                var padding = 10;
+                var canvas = d3.select("body");
+                var width = 800
+                var height = 2000
+                var name_width = 100
+                var bar_width = width-2*padding-name_width
+                var svg = canvas.append("svg")
+                    .attr("width",width)
+                    .attr("height",height)
+                    .attr("shape-rendering", "crispEdges");    //アンチエイリアスを無効にする．
+                //スケール
+                var scaleX = d3.scale.linear()
+                    .domain([0, d3.max(data, function(d){return d["Deaths - cumulative total"];})]).range([0, bar_width]);
+                var scaleY = d3.scale.linear()
+                    .domain([0, data.length]).range([0,height]);
+                var nameScale = d3.scale.linear()
+                    .domain([0, d3.max(data, function(d){return d.Name.length;})]).range([0, name_width]);
+                // 地域の配列
+                var region = {"Americas": "red", "South-East Asia": "blue", "Europe": "yellow", "Western Pacific": "cyan", "Eastern Mediterranean": "orange", "Africa": "green", "Other": "gray"}
+                //データ駆動のドローイング
+                //棒グラフ部
+                svg.selectAll("rect")
+                    .data(data).enter().append("rect")
+                    .attr("x", function(d, i){return padding+name_width})
+                    // .attr("y", function(d, i){return scaleY(i) + 100/data.length})
+                    .attr("y", function(d, i){return scaleY(i)})
+                    .attr("width", function(d, i){return scaleX(d["Deaths - cumulative total"])})
+                    .attr("height", function(d, i){return (height-200)/data.length})
+                    .attr("fill", function(d, i){return region[d["WHO Region"]]});
+                //名前の出力
+                svg.selectAll("text.name")//便宜上クラスを設定しているが，ここでは特に意味はない．
+                    .data(data).enter().append("text")
+                    .attr("x", function(d, i){return padding})
+                    // .attr("y", function(d, i){return scaleY(i) + 100/data.length})
+                    .attr("y", function(d, i){return scaleY(i)})
+                    .attr("text-anchor", "end")
+                    .attr("font-weight", "bold")
+                    .attr("font-family", "selif")
+                    .text(function(d, i){return d.Name})
+                    .attr("fill", "black");
+                // 軸
+                //scaleで軸の範囲をする．
+                var x = d3.scale.linear().domain([0,1000000]).range([padding+name_width, width-padding]);
+                //axisで軸の設定をする．
+                var xAxis = d3.svg.axis().scale(x).ticks(10).orient("top");
+                svg.append("g")
+                // .attr("transform", "translate(100,0)")//軸の描画位置はtransformで設定する．
+                .call(xAxis)
+                .selectAll("path,line")
+                .attr("fill", "none").attr("stroke", "black")
+                .attr("shape-rendering", "crispEdges");
+            }
+        </script>
+    </body>
+</html>
