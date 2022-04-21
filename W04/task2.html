@@ -1,81 +1,85 @@
 <html lang="ja">
     <head>
         <meta charset="UTF-8" />
-        <title>W04: Task 1</title>
+        <title>W04: Task 2</title>
     </head>
     <body>
-        <!-- 237カ国 -->
-        <svg id="area" width="1000" height="2000" viewBox="0, 0, 1000, 1000"></svg>
-        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <b>COVID-19 cases - cumulative total</b> <br>
+        <a href="https://covid19.who.int/WHO-COVID-19-global-table-data.csv">WHO-COVID-19-global-data</a>
+        <script src="https://d3js.org/d3.v2.min.js"></script>
         <script>
-            var svg = d3.select("#area");
+            // 237カ国
             d3.csv("https://kazuming.github.io/InfoVis2022/W04/WHO-COVID-19-global-table-data.csv", draw);
             function draw(data){
                 // http://defghi1977.html.xdomain.jp/tech/svgMemo/svgMemo_20.htm
-                //データの配列
-                // var dataArr = [
-                    //     {name: "Taro", score: 20},
-                    //     {name: "Jiro", score: 31},
-                    //     {name: "Miki", score: 14},
-                    //     {name: "Yumi", score: 32},
-                    //     {name: "Keko", score: 45},
-                    //     {name: "Yuji", score: 28},
-                    //     {name: "Toru", score: 19}
-                    // ];
-                    //カンバスの定義
-                    // var canvas = d3.select("#canvas8");
                 data.shift()
-                var padding = 10;
+                var max_cases = 100000000
+                var x_padding = 50;
+                var y_padding = 30;
+                var width = 1200;
+                var height = 5000;
+                var name_width = 150;
+                var bar_width = width-2*x_padding-name_width;
+                var total_space = 800
                 var canvas = d3.select("body");
-                var width = 800
-                var height = 2000
-                var name_width = 100
-                var bar_width = width-2*padding-name_width
                 var svg = canvas.append("svg")
                     .attr("width",width)
                     .attr("height",height)
                     .attr("shape-rendering", "crispEdges");    //アンチエイリアスを無効にする．
                 //スケール
                 var scaleX = d3.scale.linear()
-                    .domain([0, d3.max(data, function(d){return d["Deaths - cumulative total"];})]).range([0, bar_width]);
+                    .domain([0, max_cases]).range([0, bar_width]);
                 var scaleY = d3.scale.linear()
-                    .domain([0, data.length]).range([0,height]);
+                    .domain([0, data.length]).range([y_padding,height]);
                 var nameScale = d3.scale.linear()
                     .domain([0, d3.max(data, function(d){return d.Name.length;})]).range([0, name_width]);
                 // 地域の配列
-                var region = {"Americas": "red", "South-East Asia": "blue", "Europe": "yellow", "Western Pacific": "cyan", "Eastern Mediterranean": "orange", "Africa": "green", "Other": "gray"}
+                var region = {"Americas": "red", "South-East Asia": "blue", "Europe": "yellow", "Western Pacific": "cyan", "Eastern Mediterranean": "orange", "Africa": "green", "Other": "gray"};
                 //データ駆動のドローイング
                 //棒グラフ部
                 svg.selectAll("rect")
                     .data(data).enter().append("rect")
-                    .attr("x", function(d, i){return padding+name_width})
+                    .attr("x", function(d, i){return x_padding+name_width})
                     // .attr("y", function(d, i){return scaleY(i) + 100/data.length})
                     .attr("y", function(d, i){return scaleY(i)})
-                    .attr("width", function(d, i){return scaleX(d["Deaths - cumulative total"])})
-                    .attr("height", function(d, i){return (height-200)/data.length})
+                    .attr("width", function(d, i){return scaleX(d["Cases - cumulative total"])})
+                    .attr("height", function(d, i){return (height-total_space)/data.length})
                     .attr("fill", function(d, i){return region[d["WHO Region"]]});
                 //名前の出力
                 svg.selectAll("text.name")//便宜上クラスを設定しているが，ここでは特に意味はない．
                     .data(data).enter().append("text")
-                    .attr("x", function(d, i){return padding})
+                    .attr("x", function(d, i){return name_width+x_padding-3})
                     // .attr("y", function(d, i){return scaleY(i) + 100/data.length})
-                    .attr("y", function(d, i){return scaleY(i)})
+                    .attr("y", function(d, i){return scaleY(i+1)-8})
                     .attr("text-anchor", "end")
                     .attr("font-weight", "bold")
                     .attr("font-family", "selif")
+                    .attr("font-size", function(d, i){return d.Name.length <= data[0].Name.length ? 14 : 14/(d.Name.length/data[0].Name.length)+"px"})
                     .text(function(d, i){return d.Name})
                     .attr("fill", "black");
                 // 軸
                 //scaleで軸の範囲をする．
-                var x = d3.scale.linear().domain([0,1000000]).range([padding+name_width, width-padding]);
+                var x = d3.scale.linear().domain([0,max_cases]).range([x_padding+name_width, width-x_padding]);
                 //axisで軸の設定をする．
-                var xAxis = d3.svg.axis().scale(x).ticks(10).orient("top");
+                var xAxis = d3.svg.axis().scale(x).ticks(11).orient("top");
                 svg.append("g")
-                // .attr("transform", "translate(100,0)")//軸の描画位置はtransformで設定する．
+                .attr("transform", "translate(0, 30)")//軸の描画位置はtransformで設定する．
                 .call(xAxis)
                 .selectAll("path,line")
                 .attr("fill", "none").attr("stroke", "black")
                 .attr("shape-rendering", "crispEdges");
+                var canvas = d3.select("#graph8");
+                // メモリ
+                //引数はstart,stop,stepの順
+                var range = d3.range(x_padding+name_width,width-x_padding+1,bar_width/10);
+                svg.selectAll("line.v")
+                    .data(range).enter().append("line")
+                    .attr("x1", function(d,i){return d;}).attr("y1", y_padding)
+                    .attr("x2", function(d,i){return d;}).attr("y2", height);
+                svg.selectAll("line")
+                    .attr("stroke", "black")
+                    .attr("stroke-dasharray", 2)
+                    .attr("shape-rendering", "crispEdges");
             }
         </script>
     </body>
