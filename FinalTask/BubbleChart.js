@@ -10,7 +10,7 @@ class BubbleChart {
             ylabel: config.ylabel || '',
             cscale: config.cscale
         }
-        this.axis_margin = {top:0, right:25, bottom:20, left:0}
+        this.axis_margin = {top:0, right:10, bottom:10, left:0}
         this.data = data;
         this.init();
     }
@@ -73,8 +73,10 @@ class BubbleChart {
 
         self.cvalue = d => d.region;
         self.xvalue = d => d.population*1000;
-        self.yvalue = d => d.bed;
-        self.rvalue = d => d.infected/2000;
+        self.yvalue = d => d.infected;
+        self.rvalue = d => d["Number of infected people per 100,000 population"]/20;
+        const rmax = d3.max( self.data, self.rvalue );
+        self.rvalue = d => d["Number of infected people per 100,000 population"]/rmax*2;
 
         const xmin = d3.min( self.data, self.xvalue );
         const xmax = d3.max( self.data, self.xvalue );
@@ -110,7 +112,7 @@ class BubbleChart {
             .on('mouseover', (e,d) => {
                 d3.select('#tooltip')
                     .style('opacity', 1)
-                    .html(`<div class="tooltip-label">${d.prefecture}</div>Population:${d.population*1000}<br>Bed:${d.bed}<br>Infected:${d.infected}`);
+                    .html(`<div class="tooltip-label">${d.prefecture}</div>Population:${d.population*1000}<br>Infected:${d.infected}<br>infected per 100,000:${d["Number of infected people per 100,000 population"]}`);
             })
             .on('mousemove', (e) => {
                 const padding = 10;

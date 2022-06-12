@@ -3,7 +3,7 @@ let bubble_chart;
 let bar_chart;
 let filter = [];
 
-d3.csv("https://kazuming.github.io/InfoVis2022/FinalTask/data_final.csv")
+d3.csv("https://kazuming.github.io/InfoVis2022/FinalTask/data_final3.csv")
     .then( data => {
         input_data = data;
         input_data.forEach( d => {
@@ -21,7 +21,7 @@ d3.csv("https://kazuming.github.io/InfoVis2022/FinalTask/data_final.csv")
             height: 512,
             margin: {top:10, right:10, bottom:50, left:90},
             xlabel: 'Population',
-            ylabel: 'Number of Beds',
+            ylabel: 'Number of Infected People',
             cscale: color_scale
         }, input_data );
         bubble_chart.update();

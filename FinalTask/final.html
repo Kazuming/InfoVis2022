@@ -1,0 +1,52 @@
+<html>
+
+<head>
+	<title>Final Task</title>
+	<style>
+		body {
+			font-family: system-ui;
+		}
+
+		.container {
+			display: flex;
+		}
+
+		.bar.active {
+			stroke: #000;
+		}
+
+		#tooltip {
+			position: absolute;
+			opacity: 0;
+			background: #fff;
+			border: 1px solid #ddd;
+			font-size: 12px;
+			font-weight: 600;
+			padding: 2px 8px;
+		}
+
+		.tooltip-label {
+			font-weight: 500;
+			font-size: 11px;
+			color: #888;
+		}
+	</style>
+</head>
+
+<body>
+	<h2>Number of infected people per 100,000 population in the last week in each region(2022/06/12)</h2>
+	<br>
+	<a href="https://www3.nhk.or.jp/n-data/opendata/coronavirus/nhk_news_covid19_prefectures_daily_data.csv">WHO-COVID-19-opendata</a>
+	<div id="tooltip"></div>
+	<div class="container">
+		<div><svg id="drawing_region_bubblechart"></svg></div>
+		<div><svg id="drawing_region_barchart"></svg></div>
+	</div>
+	<script src="https://d3js.org/d3.v4.min.js"></script>
+	<script src="https://d3js.org/d3.v6.min.js"></script>
+	<script src="BubbleChart.js"></script>
+	<script src="BarChart.js"></script>
+	<script src="FinalTask_main.js"></script>
+</body>
+
+</html>
