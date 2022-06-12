@@ -1,0 +1,48 @@
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Final Task</title>
+        <style>
+            body {
+                font-family: system-ui;
+            }
+            .container {
+                display: flex;
+            }
+            .bar.active {
+                stroke: #000;
+            }
+            #tooltip {
+                position: absolute;
+                opacity: 0;
+                background: #fff;
+                border: 1px solid #ddd;
+                font-size: 12px;
+                font-weight: 600;
+                padding: 2px 8px;
+            }
+            .tooltip-label {
+                font-weight: 500;
+                font-size: 11px;
+                color: #888;
+            }
+        </style>
+    </head>
+    <body>
+        <h2>新型コロナウイルス感染者数</h2>
+        <div id="tooltip"></div>
+        https://www3.nhk.or.jp/n-data/opendata/coronavirus/nhk_news_covid19_prefectures_daily_data.csv
+        <div class="container">
+            <div id="jmap"></div>
+            <div><svg id="drawing_region_barchart"></svg></div>
+            <div><svg id="drawing_region_scatterplot"></svg></div>
+        </div>
+    </body>
+    <script src="https://d3js.org/d3.v6.min.js"></script>
+    <script src="w12_ex03_ScatterPlot.js"></script>
+    <script src="w12_ex03_BarChart.js"></script>
+    <script src="main.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script type="text/javascript" src="./jmap.min.js"></script>
+    <script type = "text/javascript" src="./src.js"></script>
+</html>
